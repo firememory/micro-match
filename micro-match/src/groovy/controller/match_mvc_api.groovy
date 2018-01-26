@@ -41,11 +41,12 @@ class MatchMvcApi extends MicroControllerTemplate{
 		createMap.put("user_id", request.getParameter("user_id"));
 		
 		int status=createInfoService(createMap,"match_buy");
-		
+		String orderId=createMap.get("id");
 		Map retMap=new HashMap();
 		if(status==1){
 			retMap.put("status", 0);
-			retMap.put("code", "sucess");
+			retMap.put("code", "success");
+			retMap.put("orderId", orderId);
 		}else{
 			retMap.put("status", 1);
 			retMap.put("code", "error");
@@ -77,11 +78,12 @@ class MatchMvcApi extends MicroControllerTemplate{
 		createMap.put("user_id", request.getParameter("user_id"));
 		
 		int status=createInfoService(createMap,"match_sale");
-		
+		String orderId=createMap.get("id");
 		Map retMap=new HashMap();
 		if(status==1){
 			retMap.put("status", 0);
-			retMap.put("code", "sucess");
+			retMap.put("code", "success");
+			retMap.put("orderId", orderId);
 		}else{
 			retMap.put("status", 1);
 			retMap.put("code", "error");
@@ -129,7 +131,7 @@ class MatchMvcApi extends MicroControllerTemplate{
 		Map retMap=new HashMap();
 		if(status==true){
 			retMap.put("status", 0);
-			retMap.put("code", "sucess");
+			retMap.put("code", "success");
 			retMap.put("matchId", matchId);
 		}else{
 			retMap.put("status", 1);
@@ -161,7 +163,7 @@ class MatchMvcApi extends MicroControllerTemplate{
 		Map retMap=new HashMap();
 
 			retMap.put("status", 0);
-			retMap.put("code", "sucess");
+			retMap.put("code", "success");
 			retMap.put("data", retList);
 
 		JsonBuilder jsonBuilder=new JsonBuilder(retMap);
