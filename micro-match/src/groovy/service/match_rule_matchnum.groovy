@@ -41,9 +41,9 @@ class MatchRuleMatchNum  extends MicroMapperTemplate{
 	}
 	
 	private boolean resetList4MatchNum(List indexList,int matchNum,int last){
-		for(int i=0;i<matchNum;i++){
+/*		for(int i=0;i<matchNum;i++){
 			indexList.add(i);
-		}
+		}*/
 		int totalCol=matchNum-1;
 		return resetList(indexList,totalCol,last,totalCol);
 
@@ -68,13 +68,29 @@ class MatchRuleMatchNum  extends MicroMapperTemplate{
 		}
 		return resetList(indexList,totalCol,last,col-1);
 	}
+	
+	
+	
 	private List checkGroup(List indexList, BigDecimal sourceAmount,List targetList,Integer matchNum){
 		List resultList=new ArrayList();
 		int last=targetList.size()-1;
 		if(last<matchNum){
 			return resultList;
 		}
+
+		
+		
 		while(1){
+			if(indexList.size()==0){
+				for(int j=0;j<matchNum;j++){
+				 indexList.add(j);
+				}
+			}else{
+				boolean nextStatus=resetList4MatchNum(indexList,matchNum,last);
+				if(nextStatus==false){
+					return resultList;
+				}
+			}
 			BigDecimal total=0;
 			for(int i=0;i<matchNum;i++){
 				int index=indexList.get(i);
@@ -86,10 +102,10 @@ class MatchRuleMatchNum  extends MicroMapperTemplate{
 			if(total>=sourceAmount){
 				break;
 			}
-			boolean s=resetList4MatchNum(indexList,matchNum,last);
+/*			boolean s=resetList4MatchNum(indexList,matchNum,last);
 			if(s==false){
 				return resultList;
-			}
+			}*/
 		}
 
 		for(int i=0;i<matchNum;i++){
@@ -124,9 +140,9 @@ class MatchRuleMatchNum  extends MicroMapperTemplate{
 		
 		for(int i=min;i<=max;i++){
 			List indexList=new ArrayList();
-			for(int j=0;j<i;j++){
+/*			for(int j=0;j<i;j++){
 				indexList.add(j);
-			}
+			}*/
 			while(1){
 				List checkList=checkGroup(indexList, sourceAmount, targetList, i);
 				if(checkList.size()<=0){

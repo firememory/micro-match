@@ -61,8 +61,18 @@ class MemMatch extends MicroMapperTemplate {
 
 		String firstId=ruleList.get(0);
 		String firstGroovyName=queryGroovyName(firstId);
-
 		contextMap.put("matchId", matchId);
+		
+		if(sourceInfo==null){
+			contextMap.put("msg", "待撮合记录为空");
+			return false;
+		}
+		String sourceAmount=sourceInfo.get(MatchConst.DataInfo.amount);
+		if(sourceAmount==null || (new BigDecimal(sourceAmount))<=0){
+			contextMap.put("msg", "待撮合金额为0");
+			return false;
+		}
+		
 		boolean status=GroovyExecUtil.execGroovyRetObj(firstGroovyName, "matchInfo", firstId,ruleList,0,dirFlag,sourceInfo,targetList,contextMap);
 		
 		return status;
@@ -90,7 +100,7 @@ class MemMatch extends MicroMapperTemplate {
 	private List buy2saleList(String buyId){
 
 		List<Map> nlist=new ArrayList();
-		List<Map> listInfo=getInfoListAllServiceBySql("select * from match_sale where account_amount>0");
+		List<Map> listInfo=getInfoListAllServiceBySql("select * from match_sale where account_amount>0 order by match_priority desc, create_time desc");
 
 		for(Map row:listInfo){
 			Map targetInfo=new HashMap();
@@ -122,7 +132,7 @@ class MemMatch extends MicroMapperTemplate {
 	private List sale2buyList(String saleId){
 
 		List<Map> nlist=new ArrayList();
-		List<Map> listInfo=getInfoListAllServiceBySql("select * from match_buy where account_amount>0");
+		List<Map> listInfo=getInfoListAllServiceBySql("select * from match_buy where account_amount>0 order by match_priority desc, create_time desc");
 
 		for(Map row:listInfo){
 			Map targetInfo=new HashMap();
