@@ -95,6 +95,7 @@ class MemMatch extends MicroMapperTemplate {
 		sourceInfo.put(MatchConst.DataInfo.productClass,buyInfo.get("product_class"));
 		sourceInfo.put(MatchConst.DataInfo.platformClass,buyInfo.get("platform_class"));
 		sourceInfo.put(MatchConst.DataInfo.rate,buyInfo.get("lender_rate"));
+		sourceInfo.put(MatchConst.DataInfo.time, buyInfo.get("lender_start_date"))
 		return sourceInfo;
 	}
 	private List buy2saleList(String buyId){
@@ -109,6 +110,7 @@ class MemMatch extends MicroMapperTemplate {
 			targetInfo.put(MatchConst.DataInfo.productClass,row.get("product_class"));
 			targetInfo.put(MatchConst.DataInfo.platformClass,row.get("platform_class"));
 			targetInfo.put(MatchConst.DataInfo.rate,row.get("borrow_rate"));
+			targetInfo.put(MatchConst.DataInfo.time,row.get("borrow_start_date"));
 			nlist.add(targetInfo);
 
 		}	
@@ -127,6 +129,7 @@ class MemMatch extends MicroMapperTemplate {
 		sourceInfo.put(MatchConst.DataInfo.productClass,saleInfo.get("product_class"));
 		sourceInfo.put(MatchConst.DataInfo.platformClass,saleInfo.get("platform_class"));
 		sourceInfo.put(MatchConst.DataInfo.rate,saleInfo.get("borrow_rate"));
+		sourceInfo.put(MatchConst.DataInfo.time, saleInfo.get("borrow_start_date"));
 		return sourceInfo;
 	}
 	private List sale2buyList(String saleId){
@@ -141,6 +144,7 @@ class MemMatch extends MicroMapperTemplate {
 			targetInfo.put(MatchConst.DataInfo.productClass,row.get("product_class"));
 			targetInfo.put(MatchConst.DataInfo.platformClass,row.get("platform_class"));
 			targetInfo.put(MatchConst.DataInfo.rate,row.get("lender_rate"));
+			targetInfo.put(MatchConst.DataInfo.time, row.get("lender_start_date"));
 			nlist.add(targetInfo);
 
 		}

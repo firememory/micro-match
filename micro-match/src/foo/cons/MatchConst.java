@@ -14,5 +14,6 @@ public interface MatchConst {
 		String matchPriority="match_priority";
 		String rate="rate";
 		String id="id";
+		String time="time";
 	}
 }

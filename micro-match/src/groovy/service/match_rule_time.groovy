@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ import com.nh.micro.dao.mapper.MicroMapperTemplate
 import com.nh.micro.db.*;
 
 
-class MatchRuleAmount  extends MicroMapperTemplate{
+class MatchRuleTime  extends MicroMapperTemplate{
 	private Map queryOneConfig(String ruleId){
 		Map rowMap=getInfoByBizIdService(ruleId,"match_rule","rule_id");
 
@@ -43,47 +44,50 @@ class MatchRuleAmount  extends MicroMapperTemplate{
 		Map configMap=queryOneConfig(ruleId);
 		String tempMin=configMap.get("min");
 		String tempMax=configMap.get("max");
-		BigDecimal min=null;
-		BigDecimal max=null;
+		Integer min=null;
+		Integer max=null;
 		if(tempMin!=null && !"".equals(tempMin)){
-			min=new BigDecimal(tempMin);
+			min=new Integer(tempMin);
 		}
 		if(tempMax!=null && !"".equals(tempMax)){
-			max=new BigDecimal(tempMax);
+			max=new Integer(tempMax);
 		}
 
-		
+		String sTimeStr=sourceInfo.get(MatchConst.DataInfo.time);
+		if(sTimeStr==null || "".equals(sTimeStr)){
+			contextMap.put("msg", "挂单起始时间值为空,导致时间范围规则匹配失败");
+			return false;
+		}
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		Date sDate=sdf.parse(sTimeStr);
+
 		List resultList=new ArrayList();
 		for(Map targetMap:targetList){
-			String tempAmount=targetMap.get(MatchConst.DataInfo.amount);
-			BigDecimal targetAmount=new BigDecimal(tempAmount);
+			String tempTime=targetMap.get(MatchConst.DataInfo.time);
+			if(tempTime==null && "".equals(tempTime)){
+				continue;
+			}
+			Date targetTime=sdf.parse(tempTime);
+			
+			long days=(sDate.getTime()-targetTime.getTime())/(1000*3600*24);
+			
+			
 			if(min!=null){
-				if(targetAmount<min){
+				if(days<min){
 					continue;
 				}
 			}
 			if(max!=null){
-				if(targetAmount>max){
-					targetAmount=max;
+				if(days>max){
+					continue;
 				}
 			}
-			Map resultRow=new HashMap();
-			
-			resultRow.putAll(targetMap);
-			resultRow.put(MatchConst.DataInfo.amount, targetAmount.toString());
-/*			resultRow.put(MatchConst.DataInfo.id, targetMap.get(MatchConst.DataInfo.id));
-			resultRow.put(MatchConst.DataInfo.amount, targetAmount.toString());
-			resultRow.put(MatchConst.DataInfo.productClass, targetMap.get(MatchConst.DataInfo.productClass));
-			resultRow.put(MatchConst.DataInfo.platformClass, targetMap.get(MatchConst.DataInfo.platformClass));
-			resultRow.put(MatchConst.DataInfo.matchPriority, targetMap.get(MatchConst.DataInfo.matchPriority));
-			resultRow.put(MatchConst.DataInfo.rate, targetMap.get(MatchConst.DataInfo.rate));
-			resultRow.put(MatchConst.DataInfo.time, targetMap.get(MatchConst.DataInfo.time));*/
-			resultList.add(resultRow);
+			resultList.add(targetMap);
 
 		}
 		if(resultList.size()<=0){
-			System.out.println("match_rule_amount status="+false+" ruleId="+ruleId);
-			contextMap.put("msg", "金额范围规则匹配失败");
+			System.out.println("match_rule_rate status="+false+" ruleId="+ruleId);
+			contextMap.put("msg", "时间范围规则匹配失败");
 			return false;
 		}
 		boolean status=false;
