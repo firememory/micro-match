@@ -10,7 +10,18 @@
 
 
 撮合规则管理：
-内置3个撮合规则，金额范围规则（match_rule_amount）、撮合条数规则（match_rule_matchnum）、产品类别对应规则（match_rule_product）。可以自行开发其他规则如借款期限匹配规则、利率范围规则等等。
+内置5个撮合规则，
+金额范围规则（match_rule_amount）
+
+撮合条数规则（match_rule_matchnum）
+
+产品类别对应规则（match_rule_product）
+
+利率范围规则（match_rule_rate）
+
+时间范围规则（match_rule_time）
+
+可以自行开发其他规则如借款期限匹配规则、利率范围规则等等。
  
 
 
@@ -22,6 +33,12 @@
 产品类别对应规则（match_rule_product）参数是list形式pipeiList，每行参数为买单产品类别buyProduct、买单平台类别buyPlatform、卖单产品类别saleProduct、卖单平台类别salePlatform
 例如
 {"pipeiList":[{"buyProduct":"jingying","buyPlatform":"p2p","saleProduct":"jingying","salePlatform":"p2p"}]}
+
+利率范围规则（match_rule_rate）参数是最小浮动利率min可以填写负数和最大浮动利率max
+例如{"min":-1.0,"max":1.0}
+
+时间范围规则（match_rule_time）参数是最小浮动天数min可以填写负数和最大浮动天数max
+例如{"min":-1,"max":1}
 
 挂单管理
 可以通过买单列表和卖单列表页面或接口，实现挂单。
